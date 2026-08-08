@@ -5,6 +5,7 @@
    random key per client at setup time (never reuse '4471' across deployments) and
    only tell the actual business owner, not the person doing the install. */
 const ADMIN_SETUP_KEY = '4471';
+PhotoSync.init({ endpointUrl: 'PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE', secret: 'PASTE_THE_SAME_UPLOAD_SECRET_FROM_YOUR_APPS_SCRIPT_HERE', onSynced: (itemId, url) => { const item = items.find(i => i.id === itemId); if (item) { item.photo = url; persistItems(); renderAll(); } } });
 
 /* ================= Fictional gadget catalog ================= */
 let items = JSON.parse(localStorage.getItem('ch_items') || 'null') || [
@@ -554,6 +555,7 @@ function submitNewItem(){
   if(!name || !price){ alert('Please add at least a product name and selling price.'); return; }
   const id = Math.max(0,...items.map(i=>i.id)) + 1;
   items.push({ id, name, category: category||CATEGORIES[0], unit, cost:(cost||cost===0)?cost:null, price, stock, reorder, photo: pendingPhoto, barcode: '600900'+String(1000000+id), supplier: supplier||null, expiry });
+  if (pendingPhoto) PhotoSync.queuePhoto(id, pendingPhoto);
   persistItems();
   logActivity(`Added new product "${name}"${supplier?` (supplier: ${supplier})`:''}`);
   pendingPhoto = null;
