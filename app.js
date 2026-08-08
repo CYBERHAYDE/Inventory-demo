@@ -366,7 +366,7 @@ function renderDashboard(){
       <tr><td>${photoCell(i)}</td><td>${esc(i.name)}</td><td>${esc(i.category)}</td><td class="mono">${i.stock} ${esc(i.unit)}</td><td><span class="pill low">${es.label}</span></td></tr>`).join('');
   } else { expPanel.style.display = 'none'; }
 }
-function photoCell(i){ return i.photo ? `<img class="thumb" src="${esc(i.photo)}">` : `<div class="thumb-ph">📦</div>`; }
+function photoCell(i){ if (!i.photo) return `<div class="thumb-ph">📦</div>`; const syncing = PhotoSync.isPending(i.id) ? `<span class="pill pending" style="position:absolute;font-size:9px;">⏳</span>` : ''; return `<div style="position:relative; display:inline-block;"><img class="thumb" src="${esc(i.photo)}">${syncing}</div>`; } 
 
 /* ================= Inventory ================= */
 function populateCategoryFilters(){
